@@ -1,75 +1,72 @@
 # Time Complexity: O(N) per test case
+# - Building one[] and two[] arrays: O(N)
+# - Finding the answer: O(N)
+# Total: O(N)
+#
 # Space Complexity: O(N)
+# - A array: O(N)
+# - B array: O(N)
+# - one array: O(N)
+# - two array: O(N)
+# Total: O(N)
 
 # Number of test cases
-t = int(input())
+T = int(input())
 
-for _ in range(t):
+for _ in range(T):
 
     # Length of arrays
-    n = int(input())
+    N = int(input())
 
-    # Input arrays
-    # Space: O(N)
-    a = list(map(int, input().split()))
-    b = list(map(int, input().split()))
+    # Input arrays A and B
+    A = list(map(int, input().split()))
+    B = list(map(int, input().split()))
 
-    # cnt[x] = total occurrences of value x
-    # Space: O(N)
-    cnt = [0] * (n + 1)
+    # one[x] = 1 if x appears in a pair (x,y)
+    # where x != y
+    one = [0] * (N + 1)
 
-    # same[x] = 1 if pair (x,x) exists
-    # Space: O(N)
-    same = [0] * (n + 1)
+    # two[x] = 1 if pair (x,x) exists
+    two = [0] * (N + 1)
 
     # Traverse all pairs
     # Time: O(N)
-    for i in range(n):
+    for i in range(N):
 
-        # If both values are same
-        if a[i] == b[i]:
+        # Same value in both arrays
+        if A[i] == B[i]:
 
-            # Count x once
-            cnt[a[i]] += 1
-
-            # Mark existence of (x,x)
-            same[a[i]] = 1
+            # Mark that pair (x,x) exists
+            two[A[i]] = 1
 
         else:
 
-            # Count both values
-            cnt[a[i]] += 1
-            cnt[b[i]] += 1
+            # Mark occurrence of both values
+            one[A[i]] = 1
+            one[B[i]] = 1
 
-    # Start checking from 0
-    ans = 0
+    # Counts how many values are
+    # not forced into both arrays
+    cnt = 0
 
-    # In the worst case ans moves from 0 to N
+    # Check values from 0 to N
     # Time: O(N)
-    while True:
+    for x in range(N + 1):
 
-        # Number does not appear at all
-        if cnt[ans] == 0:
+        # Value x does not appear anywhere
+        if one[x] == 0 and two[x] == 0:
+            print(x)
             break
 
-        # Number appears only once
-        if cnt[ans] == 1:
-            break
+        # Value x is not forced into both arrays
+        elif two[x] == 0:
 
-        # Number appears exactly twice
-        # but there is no (x,x) pair
-        if cnt[ans] == 2 and same[ans] == 0:
-            break
+            # First such value found
+            if cnt == 0:
+                cnt = 1
 
-        # Check next value
-        ans += 1
-
-    print(ans)
-
-# Overall Time Complexity:
-# O(N) + O(N) = O(N)
-
-# Overall Space Complexity:
-# a + b + cnt + same
-# O(N) + O(N) + O(N) + O(N)
-# = O(N)
+            # Second such value found
+            # This becomes the answer
+            else:
+                print(x)
+                break
